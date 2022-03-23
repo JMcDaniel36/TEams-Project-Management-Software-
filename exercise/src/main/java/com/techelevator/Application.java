@@ -1,6 +1,9 @@
 package com.techelevator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Application extends Employee {
@@ -19,6 +22,9 @@ public class Application extends Employee {
     }
 
     private void run() {
+        departments = new ArrayList<Department>();
+        employees = new ArrayList<Employee>();
+
         // create some departments
         createDepartments();
 
@@ -29,6 +35,7 @@ public class Application extends Employee {
         createEmployees();
 
         // give Angie a 10% raise, she is doing a great job!
+        giveAngieARaise();
 
         // print all employees
         printEmployees();
@@ -40,6 +47,7 @@ public class Application extends Employee {
 
         // print each project name and the total number of employees on the project
         printProjectsReport();
+
     }
 
     /**
@@ -59,8 +67,8 @@ public class Application extends Employee {
      */
     private void printDepartments() {
         System.out.println("------------- DEPARTMENTS ------------------------------");
-        for (Department i:departments) {
-            System.out.print(departments);
+        for (Department department : departments) {
+            System.out.println(department.getName());
         }
 
     }
@@ -74,7 +82,11 @@ public class Application extends Employee {
         employeeDean.setFirstName("Dean");
         employeeDean.setLastName("Johnson");
         employeeDean.setEmail("djohnson@teams.com");
-        employeeDean.setDepartment(departments.get(3));
+        for(Department department : departments) {
+            if (department.getName() == "Engineering") {
+                employeeDean.setDepartment(department);
+            }
+        }
         employeeDean.setHireDate("08/21/2020");
 
         employees.add(employeeDean);
@@ -82,7 +94,6 @@ public class Application extends Employee {
         Department engineeringDepartment = null;
         Department marketingDepartment = null;
         for(Department department : departments){
-            //[Department("Marketing"), Department("sales")]
             if(department.getName() == "Engineering"){
                 engineeringDepartment = department;
             } else if (department.getName() == "Marketing") {
@@ -90,12 +101,13 @@ public class Application extends Employee {
             }
         }
         Employee employeeAngie = new Employee(2, "Angie" ,"Smith", "asmith@teams.com", engineeringDepartment , "08/21/2020");
+
         employees.add(employeeAngie);
 
         Employee employeeMargaret = new Employee(3, "Margaret", "Thompson" , "mthmompson@teams.com", marketingDepartment, "08/21/2020");
         employees.add(employeeMargaret);
 
-        employeeAngie.raiseSalary(10);
+
 
     }
 
@@ -104,33 +116,68 @@ public class Application extends Employee {
      */
     private void printEmployees() {
         System.out.println("\n------------- EMPLOYEES ------------------------------");
-        for (Employee i: employees) {
-            getFullName();
-            getSalary();
-            getDepartment();
-
+        for (Employee employee: employees) {
+            System.out.println(employee.getFullName() + " (" + employee.getSalary() + ") " + employee.getDepartment().getName() + " ");
         }
     }
+
+    private void giveAngieARaise(){
+        for(Employee employee : employees) {
+            if(employee.getFirstName() == "Angie"){
+                employee.raiseSalary(10);
+            }
+        }
+    }
+    // Map<String, Integer> hm = new HashMap<String, Integer>();
+    Map<String, Project> projects = new HashMap<String, Project>();
 
     /**
      * Create the 'TEams' project.
      */
     private void createTeamsProject() {
+        Project teams = new Project("TEams", "Project Management Software", "10/10/2020", "11/10/2020");
 
+        List<Employee> engineeringEmployees = new ArrayList<Employee>();
+        for (Employee employee : employees) {
+            if (employee.getDepartment().getName() == "Engineering") {
+                engineeringEmployees.add(employee);
+            }
+        }
+        teams.setTeamMembers(engineeringEmployees);
+        projects.put("Team: ", teams);
     }
 
     /**
      * Create the 'Marketing Landing Page' project.
      */
     private void createLandingPageProject() {
-
+        Project landingPage = new Project("Marketing Landing Page", "Lead Capture Landing Page for Marketing",
+                "10/10/2020", "10/17/2020");
+        List<Employee> landingPageEmployee = new ArrayList<Employee>();
+        for (Employee employee : employees) {
+            if (employee.getDepartment().getName() == "Marketing") {
+                landingPageEmployee.add(employee);
+            }
+        }
+        landingPage.setTeamMembers(landingPageEmployee);
+        projects.put("Landing Page: ", landingPage);
     }
 
     /**
      * Print out each project in the collection.
      */
     private void printProjectsReport() {
+
         System.out.println("\n------------- PROJECTS ------------------------------");
+
+        for (Map.Entry project : projects.entrySet()) {
+
+            String key = (String)project.getKey();
+            //TeamsProject
+            Project value = (Project)project.getValue();
+
+            System.out.println(project.getKey() + "" + value.getTeamMembers().size());
+        }
 
     }
 

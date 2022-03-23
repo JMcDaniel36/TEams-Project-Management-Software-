@@ -1,13 +1,14 @@
 package com.techelevator;
 
 public class Employee {
+    private static double salary = 60000;
     private long employeeId;
     private String firstName;
     private String lastName;
     private String email;
-    private static double salary = 60000;
     private Department department;
     private String hireDate;
+    private double employeeSalary;
 
     public Employee(long employeeId, String firstName, String lastName, String email, Department department, String hireDate) {
         this.employeeId = employeeId;
@@ -16,11 +17,11 @@ public class Employee {
         this.email = email;
         this.department = department;
         this.hireDate = hireDate;
-        double employeeSalary = salary;
+        this.employeeSalary = salary;
     }
 
     public Employee() {
-
+        this.employeeSalary = salary;
     }
 
     public long getEmployeeId() {
@@ -76,13 +77,12 @@ public class Employee {
        return fullName;
     }
 
-    public double raiseSalary(double percent) {
+    public void raiseSalary(double percent) {
         percent = percent / 100;
-        salary += (salary * percent);
-        return salary;
+        employeeSalary = employeeSalary + (employeeSalary * percent);
     }
 
-    public static double getSalary() {
-        return salary;
+    public double getSalary() {
+        return employeeSalary;
     }
 }
